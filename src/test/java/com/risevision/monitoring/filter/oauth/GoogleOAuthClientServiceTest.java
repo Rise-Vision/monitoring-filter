@@ -1,3 +1,5 @@
+package com.risevision.monitoring.filter.oauth;
+
 import com.risevision.monitoring.filter.oauth.GoogleOAuthClientService;
 import com.risevision.monitoring.filter.oauth.GoogleOAuthClientServiceImpl;
 import com.risevision.monitoring.filter.oauth.TokenInfo;
