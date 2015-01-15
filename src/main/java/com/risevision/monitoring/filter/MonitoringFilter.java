@@ -2,6 +2,7 @@ package com.risevision.monitoring.filter;
 
 import com.google.gson.Gson;
 import com.risevision.monitoring.filter.oauth.GoogleOAuthClientService;
+import com.risevision.monitoring.filter.oauth.GoogleOAuthClientServiceImpl;
 import com.risevision.monitoring.filter.oauth.TokenInfoServiceImpl;
 
 import javax.servlet.*;
@@ -16,14 +17,35 @@ import java.util.logging.Logger;
 public class MonitoringFilter implements Filter {
 
     private FilterConfig filterConfig;
-    private static final Logger logger = Logger.getLogger( MonitoringFilter.class.getName() );
+    private final Logger logger;
     private GoogleOAuthClientService googleOAuthClientService;
+    private MonitoringLogDataService monitoringLogDataService;
+    private JsonService jsonService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-        googleOAuthClientService = new GoogleOAuthClientService(new TokenInfoServiceImpl());
+        this.googleOAuthClientService = new GoogleOAuthClientServiceImpl(new TokenInfoServiceImpl());
+        this.monitoringLogDataService = new MonitoringLogDataServiceImpl();
+        this.jsonService = new JsonServiceImpl();
+    }
 
+    public MonitoringFilter(){
+        logger = Logger.getLogger( MonitoringFilter.class.getName());
+    }
+
+    /**
+     * This constructor is just fot testing purpose.
+     * The filter will actually be instantiate by the servlet contest and the init method will be called
+     * @param filterConfig
+     * @param googleOAuthClientService
+     */
+    public MonitoringFilter(FilterConfig filterConfig, GoogleOAuthClientService googleOAuthClientService, MonitoringLogDataService monitoringLogDataService, JsonService jsonService,Logger logger){
+        this.filterConfig = filterConfig;
+        this.googleOAuthClientService = googleOAuthClientService;
+        this.monitoringLogDataService = monitoringLogDataService;
+        this.jsonService = jsonService;
+        this.logger = logger;
     }
 
     @Override
@@ -33,30 +55,12 @@ public class MonitoringFilter implements Filter {
 
         String clientId = googleOAuthClientService.lookupClientId(request);
 
-        MonitoringLogMessage monitoringLogMessage = new MonitoringLogMessage("CORE", request.getRequestURI(),request.getRemoteAddr(),request.getRemoteHost(), clientId);
+        MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData("Core",clientId,request);
 
-        logger.log(Level.INFO, "Monitoring: clientId={0}, data={1}", new Object[]{ clientId, new Gson().toJson(monitoringLogMessage) });
+        logger.log(Level.INFO, "Monitoring: clientId={0}, data={1}", new Object[]{ clientId, jsonService.getJson(monitoringLogData) });
 
         filterChain.doFilter(servletRequest,servletResponse);
     }
-
-    class MonitoringLogMessage {
-
-        String api;
-        String resource;
-        String ipAddress;
-        String hostname;
-        String clientId;
-
-        MonitoringLogMessage(String api, String resource, String ipAddress, String hostname, String clientId){
-            this.api = api;
-            this.resource = resource;
-            this.ipAddress = ipAddress;
-            this.hostname = hostname;
-            this.clientId = clientId;
-        }
-    }
-
 
     @Override
     public void destroy() {
