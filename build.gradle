@@ -74,6 +74,9 @@ jettyRun{
     classpath = project.sourceSets.integTest.runtimeClasspath
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+}
 
 
 
