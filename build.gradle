@@ -1,0 +1,82 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'jetty'
+
+group = theGroup
+version = theVersion
+sourceCompatibility = theSourceCompatibility
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.1'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+}
+
+
+// Test Structure
+sourceSets {
+    integTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+        }
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+import org.gradle.logging.internal.*
+System.setProperty('org.gradle.color.error', 'RED')
+def tstamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
+def buildLogDir = "${rootDir}/build/logs"
+def buildLog = new File("${buildLogDir}/buildLog.log")
+delete buildLogDir
+mkdir("${buildLogDir}")
+
+def standardOutputListener = new StandardOutputListener () {
+    void onOutput(CharSequence output) {
+        buildLog << output
+    }
+}
+
+gradle.services.get(LoggingOutputInternal).addStandardOutputListener (standardOutputListener)
+gradle.services.get(LoggingOutputInternal).addStandardErrorListener (standardOutputListener)
+
+task integTest(type:Test){
+    testClassesDir = project.sourceSets.integTest.output.classesDir
+    classpath = project.sourceSets.integTest.runtimeClasspath
+
+    doFirst {
+
+        jettyRun.httpPort = 8080    // Port for test
+        jettyRun.daemon = true
+        jettyRun.execute()
+    }
+    doLast {
+        jettyStop.stopPort = 8091   // Port for stop signal
+        jettyStop.stopKey = 'stopKey'
+        jettyStop.execute()
+
+    }
+}
+
+jettyRun{
+    webAppSourceDirectory = file("src/integTest/webapp")
+    classpath = project.sourceSets.integTest.runtimeClasspath
+}
+
+
+
+
+
+
+
