@@ -1,0 +1,13 @@
+dependencies:
+  post:
+    - ./gradlew build integTest -i
+
+deployment:
+  staging:
+    branch: /(feature|fix|chore).*/
+    commands:
+      - echo "Publish snapshot to manve repo"
+  production:
+    branch: master
+    commands:
+      - echo "Publish production version to manve repo"
