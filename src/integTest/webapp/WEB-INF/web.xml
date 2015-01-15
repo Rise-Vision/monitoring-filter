@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <filter>
+        <filter-name>MonitoringFilter</filter-name>
+        <filter-class>com.risevision.monitoring.filter.MonitoringFilter</filter-class>
+        <init-param>
+            <param-name>api</param-name>
+            <param-value>Core</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>MonitoringFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>TestAPI</servlet-name>
+        <servlet-class>com.risevision.monitoring.filter.TestAPI</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TestAPI</servlet-name>
+        <url-pattern>/TestAPI</url-pattern>
+    </servlet-mapping>
+</web-app>
