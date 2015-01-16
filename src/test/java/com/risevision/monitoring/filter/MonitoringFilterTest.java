@@ -21,7 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -144,4 +147,51 @@ public class MonitoringFilterTest {
 
     }
 
+    @Test
+    public void testAttributeForTheClientIdISAddedToTheRequest() throws IOException, ServletException {
+        String parameterName = "api";
+        String api = "Core";
+        String clientId = "xxxxxxx";
+
+        given(filterConfig.getInitParameter(parameterName)).willReturn(api);
+        given(googleOAuthClientService.lookupClientId(httpServletRequest)).willReturn(clientId);
+
+        monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(googleOAuthClientService).lookupClientId(httpServletRequest);
+        verify(httpServletRequest).setAttribute("clientId", clientId);
+
+    }
+
+    @Test
+    public void testAttributeForTheClientIdISNOTAddedToTheRequestWhenItIsNull() throws IOException, ServletException {
+        String parameterName = "api";
+        String api = "Core";
+        String clientId = null;
+
+        given(filterConfig.getInitParameter(parameterName)).willReturn(api);
+        given(googleOAuthClientService.lookupClientId(httpServletRequest)).willReturn(clientId);
+
+        monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(googleOAuthClientService).lookupClientId(httpServletRequest);
+        verify(httpServletRequest, never()).setAttribute(eq("clientId"), anyString());
+
+    }
+
+    @Test
+    public void testAttributeForTheClientIdISNOTAddedToTheRequestWhenItIsEmpty() throws IOException, ServletException {
+        String parameterName = "api";
+        String api = "Core";
+        String clientId = "";
+
+        given(filterConfig.getInitParameter(parameterName)).willReturn(api);
+        given(googleOAuthClientService.lookupClientId(httpServletRequest)).willReturn(clientId);
+
+        monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(googleOAuthClientService).lookupClientId(httpServletRequest);
+        verify(httpServletRequest, never()).setAttribute(eq("clientId"), anyString());
+
+    }
 }

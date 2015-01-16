@@ -24,6 +24,7 @@ public class MonitoringFilter implements Filter {
     private JsonService jsonService;
 
     private static final String API_NAME_PARAMETER = "api";
+    private static final String CLIENT_ID_REQUEST_ATTRIBUTE_NAME = "clientId";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -67,6 +68,10 @@ public class MonitoringFilter implements Filter {
         MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData(api,clientId,request);
 
         logger.log(Level.INFO, "Monitoring: clientId={0}, data={1}", new Object[]{ clientId, jsonService.getJson(monitoringLogData) });
+
+        if (clientId != null && !clientId.isEmpty()) {
+            request.setAttribute(CLIENT_ID_REQUEST_ATTRIBUTE_NAME, clientId);
+        }
 
         filterChain.doFilter(servletRequest,servletResponse);
     }
