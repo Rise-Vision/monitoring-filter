@@ -5,5 +5,5 @@ package com.risevision.monitoring.filter;
  */
 public interface JsonService {
 
-    public String getJson(Object object);
+    public String getJson(Object object, Class clazz);
 }

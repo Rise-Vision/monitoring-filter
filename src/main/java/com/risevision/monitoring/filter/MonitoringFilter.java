@@ -2,6 +2,7 @@ package com.risevision.monitoring.filter;
 
 import com.risevision.monitoring.filter.oauth.GoogleOAuthClientService;
 import com.risevision.monitoring.filter.oauth.GoogleOAuthClientServiceImpl;
+import com.risevision.monitoring.filter.oauth.TokenInfo;
 import com.risevision.monitoring.filter.oauth.TokenInfoServiceImpl;
 
 import javax.servlet.*;
@@ -68,17 +69,24 @@ public class MonitoringFilter implements Filter {
 
         String api = getAPIFromRequest(apis, request.getRequestURI());
 
-        String clientId = googleOAuthClientService.lookupClientId(request);
+        TokenInfo tokenInfo = googleOAuthClientService.lookupTokenInfo(request);
 
-        MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData(service, api, clientId);
+        String clientId = null;
+        String userId = null;
+        if (tokenInfo != null) {
+            clientId = tokenInfo.getIssued_to();
+            userId = tokenInfo.getEmail();
+        }
 
-        logger.log(Level.INFO, "Monitoring: data={1}", jsonService.getJson(monitoringLogData));
+        MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData(service, api, clientId, userId);
+
+        logger.log(Level.INFO, "Monitoring: data={1}", jsonService.getJson(monitoringLogData, MonitoringLogData.class));
 
         if (clientId != null && !clientId.isEmpty()) {
             request.setAttribute(CLIENT_ID_REQUEST_ATTRIBUTE_NAME, clientId);
         }
 
-        filterChain.doFilter(servletRequest,servletResponse);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     private String getAPIFromRequest(String apis, String URI) {
