@@ -5,7 +5,7 @@ package com.risevision.monitoring.filter;
  */
 public class MonitoringLogDataServiceImpl implements MonitoringLogDataService {
     @Override
-    public MonitoringLogData getMonitoringLogData(String service, String api, String clientId, String userId) {
+    public MonitoringLogData getMonitoringLogData(String api, String clientId, String userId) {
 
         MonitoringLogData monitoringLogData = new MonitoringLogData();
         monitoringLogData.setApi(api);

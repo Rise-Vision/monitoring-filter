@@ -30,7 +30,6 @@ public class MonitoringFilterTest {
 
     String apiParameterName = "apis";
     String serviceParameterName = "service";
-    String serviceName = "Core";
     String apis = "CoreAPIv1,RiseAPIv0,TestAPIv0";
     String api = "CoreAPIv1";
     String URI = "/_ah/spi/com.risevision.core.api.v1." + api + ".getCompany";
@@ -72,13 +71,12 @@ public class MonitoringFilterTest {
         MockitoAnnotations.initMocks(this);
         monitoringFilter = new MonitoringFilter(filterConfig, googleOAuthClientService, monitoringLogDataService, jsonService, logger);
 
-        given(filterConfig.getInitParameter(serviceParameterName)).willReturn(serviceName);
         given(filterConfig.getInitParameter(apiParameterName)).willReturn(apis);
         given(httpServletRequest.getRequestURI()).willReturn(URI);
         given(tokenInfo.getIssued_to()).willReturn(clientId);
         given(tokenInfo.getEmail()).willReturn(userId);
         given(googleOAuthClientService.lookupTokenInfo(httpServletRequest)).willReturn(tokenInfo);
-        given(monitoringLogDataService.getMonitoringLogData(serviceName, api, clientId, userId)).willReturn(monitoringLogData);
+        given(monitoringLogDataService.getMonitoringLogData(api, clientId, userId)).willReturn(monitoringLogData);
     }
 
     @Test
@@ -97,7 +95,7 @@ public class MonitoringFilterTest {
 
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(monitoringLogDataServiceSpy).getMonitoringLogData(serviceName, api, clientId, userId);
+        verify(monitoringLogDataServiceSpy).getMonitoringLogData(api, clientId, userId);
         verify(jsonServiceSpy).getJson(anyObject(), eq(MonitoringLogData.class));
 
         verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), eq(data));
@@ -112,7 +110,7 @@ public class MonitoringFilterTest {
 
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(monitoringLogDataServiceSpy).getMonitoringLogData(serviceName, api, null, null);
+        verify(monitoringLogDataServiceSpy).getMonitoringLogData(api, null, null);
         verify(jsonServiceSpy).getJson(anyObject(), eq(MonitoringLogData.class));
 
         verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), eq(data));
@@ -124,7 +122,6 @@ public class MonitoringFilterTest {
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(filterConfig).getInitParameter(apiParameterName);
-        verify(filterConfig).getInitParameter(serviceParameterName);
 
     }
 
@@ -132,15 +129,6 @@ public class MonitoringFilterTest {
     public void testThrowAnExceptionIfApisParameterIsNull() throws IOException, ServletException, ConfigurationException {
 
         given(filterConfig.getInitParameter(apiParameterName)).willReturn(null);
-
-        monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
-
-    }
-
-    @Test(expected = ServletException.class)
-    public void testThrowAnExceptionIfServiceParameterIsNull() throws IOException, ServletException, ConfigurationException {
-
-        given(filterConfig.getInitParameter(serviceParameterName)).willReturn(null);
 
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
@@ -155,15 +143,6 @@ public class MonitoringFilterTest {
 
     }
 
-    @Test(expected = ServletException.class)
-    public void testThrowAnExceptionIfServiceParameterIsEmpty() throws IOException, ServletException, ConfigurationException {
-
-        given(filterConfig.getInitParameter(serviceParameterName)).willReturn("");
-
-        monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
-
-    }
-
     @Test
     public void testWhenApiNamesParameterHasSingleElement() throws IOException, ServletException {
 
@@ -172,7 +151,6 @@ public class MonitoringFilterTest {
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(filterConfig).getInitParameter(apiParameterName);
-        verify(filterConfig).getInitParameter(serviceParameterName);
         verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), anyString());
     }
 

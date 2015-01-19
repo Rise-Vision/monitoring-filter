@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 public class MonitoringFilter implements Filter {
 
     private static final String APIS_PARAMETER = "apis";
-    private static final String SERVICE_PARAMETER = "service";
     private static final String CLIENT_ID_REQUEST_ATTRIBUTE_NAME = "clientId";
     private final Logger logger;
     private FilterConfig filterConfig;
@@ -55,12 +54,7 @@ public class MonitoringFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        String service = filterConfig.getInitParameter(SERVICE_PARAMETER);
         String apis = filterConfig.getInitParameter(APIS_PARAMETER);
-
-        if (service == null || service.isEmpty()) {
-            throw new ServletException("Filter parameter \"" + SERVICE_PARAMETER + "\" must be set. It cannot be null or empty.");
-        }
 
         if (apis == null || apis.isEmpty()) {
             throw new ServletException("Filter parameter \"" + APIS_PARAMETER + "\" must be set. It cannot be null or empty.");
@@ -78,7 +72,7 @@ public class MonitoringFilter implements Filter {
             userId = tokenInfo.getEmail();
         }
 
-        MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData(service, api, clientId, userId);
+        MonitoringLogData monitoringLogData = monitoringLogDataService.getMonitoringLogData(api, clientId, userId);
 
         logger.log(Level.INFO, "Monitoring: data={1}", jsonService.getJson(monitoringLogData, MonitoringLogData.class));
 

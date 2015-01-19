@@ -5,5 +5,5 @@ package com.risevision.monitoring.filter;
  */
 public interface MonitoringLogDataService {
 
-    public MonitoringLogData getMonitoringLogData(String service, String api, String clientId, String userid);
+    public MonitoringLogData getMonitoringLogData(String api, String clientId, String userid);
 }
