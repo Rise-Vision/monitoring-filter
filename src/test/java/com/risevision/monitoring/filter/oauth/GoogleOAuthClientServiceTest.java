@@ -1,9 +1,5 @@
 package com.risevision.monitoring.filter.oauth;
 
-import com.risevision.monitoring.filter.oauth.GoogleOAuthClientService;
-import com.risevision.monitoring.filter.oauth.GoogleOAuthClientServiceImpl;
-import com.risevision.monitoring.filter.oauth.TokenInfo;
-import com.risevision.monitoring.filter.oauth.TokenInfoService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -5,9 +5,17 @@ package com.risevision.monitoring.filter;
  */
 public class MonitoringLogData {
 
+    private String service;
     private String api;
     private String clientId;
-    private Request request;
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
 
     public String getApi() {
         return api;
@@ -23,13 +31,5 @@ public class MonitoringLogData {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
     }
 }
