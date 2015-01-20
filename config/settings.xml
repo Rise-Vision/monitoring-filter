@@ -2,28 +2,29 @@
           xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                       http://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <server>
-        <id>mvn-repo-releases</id>
-        <configuration>
-            <httpHeaders>
-                <property>
-                    <name>Authorization</name>
-                    <value>${env.GIT_HUB_OAUTH_TOKEN}</value>
-                </property>
-            </httpHeaders>
-        </configuration>
-    </server>
+    <servers>
+        <server>
+            <id>mvn-repo-releases</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>Authorization</name>
+                        <value>${env.GIT_HUB_OAUTH_TOKEN}</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
 
-    <server>
-        <id>mvn-repo-snapshots</id>
-        <configuration>
-            <httpHeaders>
-                <property>
-                    <name>Authorization</name>
-                    <value>${env.GIT_HUB_OAUTH_TOKEN}</value>
-                </property>
-            </httpHeaders>
-        </configuration>
-    </server>
-
+        <server>
+            <id>mvn-repo-snapshots</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>Authorization</name>
+                        <value>${env.GIT_HUB_OAUTH_TOKEN}</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
+        </server>
+    </servers>
 </settings>
