@@ -51,7 +51,6 @@ mvn test
 ```
 
 ### Usage
-##Usage
 ```xml
 
 <!-- Inside pom.xml of your project -->
@@ -92,8 +91,6 @@ mvn test
 </dependency>
 
 ```
-
-```xml
 
 ## Submitting Issues
 If you encounter problems or find defects we really want to hear about them. If you could take the time to add them as issues to this Repository it would be most appreciated. When reporting issues please use the following format where applicable:
