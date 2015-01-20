@@ -1,3 +1,7 @@
+dependencies:
+  post:
+    - git config --global user.name CIRCLE_USERNAME
+
 deployment:
   staging:
     branch: /(feature|fix|chore).*/
