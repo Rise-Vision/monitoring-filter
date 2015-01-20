@@ -1,0 +1,9 @@
+deployment:
+  staging:
+    branch: /(feature|fix|chore).*/
+    commands:
+      - mvn deploy
+  production:
+    branch: master
+    commands:
+      - mvn deploy
