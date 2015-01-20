@@ -49,6 +49,52 @@ mvn clean install
 ``` bash
 mvn test
 ```
+
+### Usage
+##Usage
+```xml
+
+<!-- Inside pom.xml of your project -->
+
+<repositories>
+  <repository>
+    <id>mvn-repo-releases</id>
+    <releases>
+      <enabled>true</enabled>
+    </releases>
+    <snapshots>
+      <enabled>false</enabled>
+    </snapshots>
+    <name>Maven Repository - Releases</name>
+    <url>https://raw.github.com/Rise-Vision/mvn-repo/releases</url>
+  </repository>
+  <repository>
+    <id>mvn-repo-snapshots</id>
+    <releases>
+      <enabled>false</enabled>
+    </releases>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+    <name>Maven Repository - Snapshots</name>
+    <url>https://raw.github.com/Rise-Vision/mvn-repo/snapshots</url>
+  </repository>
+</repositories>
+
+<!-- ... -->
+
+<!-- In the <dependencies> section of your project's pom.xml -->
+<dependency>
+  <!-- From our private repo -->
+  <groupId>com.risevision.monitoring</groupId>
+  <artifactId>monitoring-filter</artifactId>
+  <version>1.0</version>
+</dependency>
+
+```
+
+```xml
+
 ## Submitting Issues
 If you encounter problems or find defects we really want to hear about them. If you could take the time to add them as issues to this Repository it would be most appreciated. When reporting issues please use the following format where applicable:
 
