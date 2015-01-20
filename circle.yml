@@ -2,8 +2,8 @@ deployment:
   staging:
     branch: /(feature|fix|chore).*/
     commands:
-      - mvn deploy
+      - mvn deploy -s conf/settings.xml
   production:
     branch: master
     commands:
-      - mvn deploy
+      - mvn deploy -s conf/settings.xml
