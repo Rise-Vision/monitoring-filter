@@ -28,13 +28,10 @@ import static org.mockito.Mockito.verify;
  */
 public class MonitoringFilterTest {
 
-    String apiParameterName = "apis";
-    String serviceParameterName = "service";
-    String apis = "CoreAPIv1,RiseAPIv0,TestAPIv0";
-    String api = "CoreAPIv1";
-    String URI = "/_ah/spi/com.risevision.core.api.v1." + api + ".getCompany";
-    String clientId = "xxxxxxx";
-    String userId = "example@gmail.com";
+    private String apiParameterName;
+    private String api;
+    private String clientId;
+    private String userId;
 
 
     @Mock
@@ -70,6 +67,13 @@ public class MonitoringFilterTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         monitoringFilter = new MonitoringFilter(filterConfig, googleOAuthClientService, monitoringLogDataService, jsonService, logger);
+
+        this.apiParameterName = "apis";
+        String apis = "CoreAPIv1,RiseAPIv0,TestAPIv0";
+        this.api = "CoreAPIv1";
+        String URI = "/_ah/spi/com.risevision.core.api.v1." + api + ".getCompany";
+        this.clientId = "xxxxxxx";
+        this.userId = "example@gmail.com";
 
         given(filterConfig.getInitParameter(apiParameterName)).willReturn(apis);
         given(httpServletRequest.getRequestURI()).willReturn(URI);

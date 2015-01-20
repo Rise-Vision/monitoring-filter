@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Created by rodrigopavezi on 1/7/15.
  */
-public class MonitoringFilter implements Filter {
+class MonitoringFilter implements Filter {
 
     private static final String APIS_PARAMETER = "apis";
     private static final String CLIENT_ID_REQUEST_ATTRIBUTE_NAME = "clientId";
@@ -24,6 +24,7 @@ public class MonitoringFilter implements Filter {
     private MonitoringLogDataService monitoringLogDataService;
     private JsonService jsonService;
 
+    @SuppressWarnings("WeakerAccess")
     public MonitoringFilter() {
         logger = Logger.getLogger(MonitoringFilter.class.getName());
     }

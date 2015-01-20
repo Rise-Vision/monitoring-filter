@@ -13,7 +13,7 @@ public class GoogleOAuthClientServiceImpl implements GoogleOAuthClientService {
     private static final String AUTH_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    private TokenInfoService tokenInfoService;
+    private final TokenInfoService tokenInfoService;
 
     public GoogleOAuthClientServiceImpl(TokenInfoService tokenInfoService) {
         this.tokenInfoService = tokenInfoService;
@@ -31,11 +31,17 @@ public class GoogleOAuthClientServiceImpl implements GoogleOAuthClientService {
 
                 String token = auth.substring(TOKEN_PREFIX.length());
 
-                if (token != null && !token.isEmpty()) {
+                if (!token.isEmpty()) {
 
                     tokenInfo = tokenInfoService.getTokenInfo(token);
+                } else {
+                    logger.info("There isn't Bearer token on the Authorization header");
                 }
+            } else {
+                logger.info("There isn't Authorization on the request header");
             }
+        } else {
+            logger.warning("Request is null");
         }
 
         return tokenInfo;
