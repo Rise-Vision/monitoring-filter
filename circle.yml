@@ -1,13 +1,9 @@
-dependencies:
-  post:
-    - git config user.name CIRCLE_USERNAME
-
 deployment:
   staging:
     branch: /(feature|fix|chore).*/
     commands:
-      - mvn deploy
+      - mvn deploy -s config/settings.xml
   production:
     branch: master
     commands:
-      - mvn deploy
+      - mvn deploy -s config/settings.xml
