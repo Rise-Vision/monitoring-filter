@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The Monitoring Filter is a servlet filter implemented to be use within your Google App Engine application. When it is enabled in you GAE app, it will intercepts all the request, get specific information from it then record a log entry with the extracted information.
+The Monitoring Filter is a servlet filter implemented to be use within your Google App Engine application. When it is enabled in you GAE app, it will intercept all the requests, get specific information from them then record a log entry with the extracted information.
 
 The currently version has been implemented to get the GAE client id OAuth token and the username for logged in users 
 
