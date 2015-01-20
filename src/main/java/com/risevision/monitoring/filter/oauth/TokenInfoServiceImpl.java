@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 /**
  * Created by rodrigopavezi on 1/13/15.
  */
-public class TokenInfoServiceImpl implements TokenInfoService{
+public class TokenInfoServiceImpl implements TokenInfoService {
 
-    private static final Logger logger = Logger.getLogger( TokenInfoServiceImpl.class.getName() );
+    private static final Logger logger = Logger.getLogger(TokenInfoServiceImpl.class.getName());
 
     private static final String GOOGLE_TOKEN_INFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
 
@@ -26,9 +26,9 @@ public class TokenInfoServiceImpl implements TokenInfoService{
         return new Gson().fromJson(jsonText, TokenInfo.class);
     }
 
-     private String getJsonFromUrl(String jsonUrl) {
+    private String getJsonFromUrl(String jsonUrl) {
 
-        String result = null;
+        String result;
 
         try {
             StringBuilder sb = new StringBuilder();

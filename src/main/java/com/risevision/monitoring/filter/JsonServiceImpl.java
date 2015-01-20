@@ -7,8 +7,8 @@ import com.google.gson.Gson;
  */
 public class JsonServiceImpl implements JsonService {
     @Override
-    public String getJson(Object object) {
+    public String getJson(Object object, Class clazz) {
 
-       return new Gson().toJson(object, object.getClass());
+        return new Gson().toJson(object, clazz);
     }
 }

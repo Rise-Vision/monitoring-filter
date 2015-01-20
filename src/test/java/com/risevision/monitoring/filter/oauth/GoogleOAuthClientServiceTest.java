@@ -1,9 +1,5 @@
 package com.risevision.monitoring.filter.oauth;
 
-import com.risevision.monitoring.filter.oauth.GoogleOAuthClientService;
-import com.risevision.monitoring.filter.oauth.GoogleOAuthClientServiceImpl;
-import com.risevision.monitoring.filter.oauth.TokenInfo;
-import com.risevision.monitoring.filter.oauth.TokenInfoService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,11 +8,11 @@ import org.mockito.MockitoAnnotations;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by rodrigopavezi on 1/13/15.
@@ -29,10 +25,10 @@ public class GoogleOAuthClientServiceTest {
     private TokenInfoService tokenInfoService;
 
     @Mock
-    private TokenInfo tokenInfo;
+    private HttpServletRequest httpServletRequest;
 
     @Mock
-    private HttpServletRequest httpServletRequest;
+    private TokenInfo tokenInfo;
 
     @Before
     public void setup() {
@@ -41,123 +37,78 @@ public class GoogleOAuthClientServiceTest {
     }
 
     @Test
-    public void testLookUpClientIdWithAValidToken() {
+    public void testLookUpTokenInfo() {
         String authorization = "Bearer xxxxxxxxxx";
         String token = "xxxxxxxxxx";
-        String expectedClientId = "ccccccccc";
 
         given(httpServletRequest.getHeader("Authorization")).willReturn(authorization);
         given(tokenInfoService.getTokenInfo(token)).willReturn(tokenInfo);
-        given(tokenInfo.getIssued_to()).willReturn(expectedClientId);
 
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
+        TokenInfo actualTokenInfo = googleOAuthClientService.lookupTokenInfo(httpServletRequest);
 
         verify(httpServletRequest).getHeader("Authorization");
         verify(tokenInfoService).getTokenInfo(token);
-        verify(tokenInfo, atLeastOnce()).getIssued_to();
 
-        assertThat(expectedClientId, is(equalTo(actualClientId)));
+        assertThat(actualTokenInfo, is(tokenInfo));
     }
 
     @Test
-    public void testLookUpClientIdReturnsNullIfTokenInfoCannotBeRetrieved() {
+    public void testLookUpTokenInfoReturnsNullIfTokenInfoCannotBeRetrieved() {
         String authorization = "Bearer xxxxxxxxxx";
         String token = "xxxxxxxxxx";
 
         given(httpServletRequest.getHeader("Authorization")).willReturn(authorization);
         given(tokenInfoService.getTokenInfo(token)).willReturn(null);
 
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
+        TokenInfo actualTokenInfo = googleOAuthClientService.lookupTokenInfo(httpServletRequest);
 
         verify(httpServletRequest).getHeader("Authorization");
         verify(tokenInfoService).getTokenInfo(token);
-        verify(tokenInfo, never()).getIssued_to();
 
-        assertThat(actualClientId, is(nullValue()));
+        assertThat(actualTokenInfo, is(nullValue()));
     }
 
     @Test
-    public void testLookUpClientIdReturnsNullIfRequestIsNull() {
+    public void testLookUpTokenInfoReturnsNullIfRequestIsNull() {
 
         String token = "xxxxxxxxxx";
 
-        String actualClientId = googleOAuthClientService.lookupClientId(null);
+        TokenInfo actualTokenInfo = googleOAuthClientService.lookupTokenInfo(null);
 
         verify(httpServletRequest, never()).getHeader("Authorization");
         verify(tokenInfoService, never()).getTokenInfo(token);
-        verify(tokenInfo, never()).getIssued_to();
 
-        assertThat(actualClientId, is(nullValue()));
+        assertThat(actualTokenInfo, is(nullValue()));
     }
 
     @Test
-    public void testLookUpClientIdReturnsNullIfRequestHeaderDoesNotContainAuthorization() {
+    public void testLookUpTokenInfoReturnsNullIfRequestHeaderDoesNotContainAuthorization() {
 
         String token = "xxxxxxxxxx";
 
         given(httpServletRequest.getHeader("Authorization")).willReturn(null);
 
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
+        TokenInfo actualTokenInfo = googleOAuthClientService.lookupTokenInfo(httpServletRequest);
 
         verify(httpServletRequest).getHeader("Authorization");
         verify(tokenInfoService, never()).getTokenInfo(token);
-        verify(tokenInfo, never()).getIssued_to();
 
-        assertThat(actualClientId, is(nullValue()));
+        assertThat(actualTokenInfo, is(nullValue()));
     }
 
     @Test
-    public void testLookUpClientIdReturnsNullIfTokenIsEmpty() {
+    public void testLookUpTokenInfoReturnsNullIfTokenIsEmpty() {
 
         String authorization = "Bearer ";
         String token = "xxxxxxxxxx";
 
         given(httpServletRequest.getHeader("Authorization")).willReturn(authorization);
 
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
+        TokenInfo actualTokenInfo = googleOAuthClientService.lookupTokenInfo(httpServletRequest);
 
         verify(httpServletRequest).getHeader("Authorization");
         verify(tokenInfoService, never()).getTokenInfo(token);
-        verify(tokenInfo, never()).getIssued_to();
 
-        assertThat(actualClientId, is(nullValue()));
-    }
-
-    @Test
-    public void testLookUpClientIdReturnsNullIfTokenInfoHasNullClientId() {
-
-        String authorization = "Bearer xxxxxxxxxx";
-        String token = "xxxxxxxxxx";
-
-        given(httpServletRequest.getHeader("Authorization")).willReturn(authorization);
-        given(tokenInfoService.getTokenInfo(token)).willReturn(tokenInfo);
-        given(tokenInfo.getIssued_to()).willReturn(null);
-
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
-
-        verify(httpServletRequest).getHeader("Authorization");
-        verify(tokenInfoService).getTokenInfo(token);
-        verify(tokenInfo, atLeastOnce()).getIssued_to();
-
-        assertThat(actualClientId, is(nullValue()));
-    }
-
-    @Test
-    public void testLookUpClientIdReturnsNullIfTokenInfoHasEmptyClientId() {
-
-        String authorization = "Bearer xxxxxxxxxx";
-        String token = "xxxxxxxxxx";
-
-        given(httpServletRequest.getHeader("Authorization")).willReturn(authorization);
-        given(tokenInfoService.getTokenInfo(token)).willReturn(tokenInfo);
-        given(tokenInfo.getIssued_to()).willReturn("");
-
-        String actualClientId = googleOAuthClientService.lookupClientId(httpServletRequest);
-
-        verify(httpServletRequest).getHeader("Authorization");
-        verify(tokenInfoService).getTokenInfo(token);
-        verify(tokenInfo, atLeastOnce()).getIssued_to();
-
-        assertThat(actualClientId, is(nullValue()));
+        assertThat(actualTokenInfo, is(nullValue()));
     }
 }

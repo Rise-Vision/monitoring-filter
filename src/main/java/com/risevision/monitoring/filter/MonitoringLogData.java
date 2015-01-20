@@ -7,7 +7,7 @@ public class MonitoringLogData {
 
     private String api;
     private String clientId;
-    private Request request;
+    private String userId;
 
     public String getApi() {
         return api;
@@ -25,11 +25,11 @@ public class MonitoringLogData {
         this.clientId = clientId;
     }
 
-    public Request getRequest() {
-        return request;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setRequest(Request request) {
-        this.request = request;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

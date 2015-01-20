@@ -13,15 +13,15 @@ public class GoogleOAuthClientServiceImpl implements GoogleOAuthClientService {
     private static final String AUTH_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    private TokenInfoService tokenInfoService;
+    private final TokenInfoService tokenInfoService;
 
     public GoogleOAuthClientServiceImpl(TokenInfoService tokenInfoService) {
         this.tokenInfoService = tokenInfoService;
     }
 
-    public String lookupClientId(HttpServletRequest request) {
+    public TokenInfo lookupTokenInfo(HttpServletRequest request) {
 
-        String clientId = null;
+        TokenInfo tokenInfo = null;
 
         if (request != null) {
 
@@ -31,31 +31,20 @@ public class GoogleOAuthClientServiceImpl implements GoogleOAuthClientService {
 
                 String token = auth.substring(TOKEN_PREFIX.length());
 
-                if (token != null && !token.isEmpty()) {
+                if (!token.isEmpty()) {
 
-                    TokenInfo tokenInfo = tokenInfoService.getTokenInfo(token);
-
-                    if (tokenInfo != null) {
-
-                        if (tokenInfo.getIssued_to() != null && !tokenInfo.getIssued_to().isEmpty()) {
-
-                            clientId = tokenInfo.getIssued_to();
-
-                        } else {
-
-                            logger.info("TokenInfo does not contain a client id(issued_to)");
-
-                        }
-                    } else {
-                        logger.info("TokenInfo is null. Something happened that it could not be retrieved from OAuth token info service");
-                    }
+                    tokenInfo = tokenInfoService.getTokenInfo(token);
+                } else {
+                    logger.info("There isn't Bearer token on the Authorization header");
                 }
+            } else {
+                logger.info("There isn't Authorization on the request header");
             }
+        } else {
+            logger.warning("Request is null");
         }
 
-        logger.info("Client ID: " + clientId);
-
-        return clientId;
+        return tokenInfo;
 
     }
 }
