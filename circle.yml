@@ -1,5 +1,5 @@
 dependencies:
-  post:
+  pre:
     - git config --global user.name CIRCLE_USERNAME
 
 deployment:
