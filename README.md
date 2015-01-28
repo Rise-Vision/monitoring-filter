@@ -51,6 +51,8 @@ mvn test
 ```
 
 ### Usage
+* Add Monitoring filter as dependency to your project 
+
 ```xml
 
 <!-- Inside pom.xml of your project -->
@@ -91,6 +93,26 @@ mvn test
 </dependency>
 
 ```
+
+* Configure the filter on the web.xml of your project. It accepts a list of api names which are the API class names. 
+
+```xml
+    
+<filter>
+    <filter-name>MonitoringFilter</filter-name>
+    <filter-class>com.risevision.monitoring.filter.MonitoringFilter</filter-class>
+    <init-param>
+        <param-name>apis</param-name>
+        <param-value>API_1_CLASS_NAME, API_2_CLASS_NAME</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>MonitoringFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+```
+
 
 ## Submitting Issues
 If you encounter problems or find defects we really want to hear about them. If you could take the time to add them as issues to this Repository it would be most appreciated. When reporting issues please use the following format where applicable:
