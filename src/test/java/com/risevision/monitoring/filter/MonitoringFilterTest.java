@@ -88,7 +88,7 @@ public class MonitoringFilterTest {
 
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), anyString());
+        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={0}"), anyString());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class MonitoringFilterTest {
         verify(monitoringLogDataServiceSpy).getMonitoringLogData(api, clientId, userId);
         verify(jsonServiceSpy).getJson(anyObject(), eq(MonitoringLogData.class));
 
-        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), eq(data));
+        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={0}"), eq(data));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class MonitoringFilterTest {
         verify(monitoringLogDataServiceSpy).getMonitoringLogData(api, null, null);
         verify(jsonServiceSpy).getJson(anyObject(), eq(MonitoringLogData.class));
 
-        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), eq(data));
+        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={0}"), eq(data));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class MonitoringFilterTest {
         monitoringFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(filterConfig).getInitParameter(apiParameterName);
-        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={1}"), anyString());
+        verify(logger).log(eq(Level.INFO), eq("Monitoring: data={0}"), anyString());
     }
 
     @Test
