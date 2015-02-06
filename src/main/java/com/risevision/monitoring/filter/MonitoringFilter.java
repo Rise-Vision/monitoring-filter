@@ -36,10 +36,13 @@ public class MonitoringFilter implements Filter {
 
 
     private final Logger logger = Logger.getLogger(MonitoringFilter.class.getName());
-    ;
+
     private FilterConfig filterConfig;
     private TimeService timeService;
 
+    @SuppressWarnings("WeakerAccess")
+    public MonitoringFilter() {
+    }
 
     /**
      * This constructor is just fot testing purpose.
