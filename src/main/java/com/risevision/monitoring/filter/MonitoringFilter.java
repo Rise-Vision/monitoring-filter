@@ -23,7 +23,7 @@ public class MonitoringFilter implements Filter {
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String APP_ENGINE_MODULE = "monitoring";
 
-    private static final String MONITORING_QUEUE_NAME = "monitoring";
+    private static final String MONITORING_QUEUE_NAME = "apiMonitoring";
     private static final String MONITORING_TASK_NAME = "monitoring_log";
 
     private static final String TASK_PARAMETER = "task";

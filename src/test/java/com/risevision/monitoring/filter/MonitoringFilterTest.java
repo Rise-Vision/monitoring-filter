@@ -98,7 +98,7 @@ public class MonitoringFilterTest {
 
         URI = "/_ah/spi/com.risevision.core.api.v1." + api + ".getCompany";
 
-        queueName = "monitoring";
+        queueName = "apiMonitoring";
 
         taskName = "monitoring_log";
 
