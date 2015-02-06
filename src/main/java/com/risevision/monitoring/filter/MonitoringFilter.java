@@ -91,6 +91,16 @@ public class MonitoringFilter implements Filter {
                         .param(TIME_PARAMETER, String.valueOf(timeService.getCurrentUnixTimestamp()))
                         .method(TaskOptions.Method.GET)
                         .header("Host", modulesApi.getVersionHostname(APP_ENGINE_MODULE, modulesApi.getDefaultVersion(APP_ENGINE_MODULE))));
+
+                logger.info("Task added to the queue: " +
+                        MONITORING_QUEUE_NAME + " details: task=" +
+                        MONITORING_TASK_NAME + ", " +
+                        IP_PARAMETER + "=" + request.getRemoteAddr() + ", " +
+                        HOST_PARAMETER + "=" + request.getRemoteHost() + ", " +
+                        RESOURE_PARAMETER + "=" + request.getRequestURI() + ", " +
+                        BEARER_TOKEN_PARAMETER + "=" + bearerToken + ", " +
+                        API_PARAMETER + "=" + api + ", " +
+                        TIME_PARAMETER + "=" + String.valueOf(timeService.getCurrentUnixTimestamp()));
             }
         } catch (Exception exception) {
             logger.log(Level.WARNING, "Monitoring log task could not be added to the monitoring queue", exception);
