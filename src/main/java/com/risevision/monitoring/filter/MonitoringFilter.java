@@ -63,6 +63,7 @@ public class MonitoringFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
+        logger.info("Starting monitoring filter execution");
 
         String apis = filterConfig.getInitParameter(APIS_PARAMETER);
 
@@ -78,6 +79,8 @@ public class MonitoringFilter implements Filter {
 
 
             if (bearerToken != null && !bearerToken.isEmpty() && api != null && !api.isEmpty()) {
+
+                logger.info("Starting to add task to the queue");
 
                 ModulesService modulesApi = ModulesServiceFactory.getModulesService();
 
