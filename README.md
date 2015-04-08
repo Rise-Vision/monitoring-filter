@@ -89,7 +89,7 @@ mvn test
   <!-- From our private repo -->
   <groupId>com.risevision.monitoring</groupId>
   <artifactId>monitoring-filter</artifactId>
-  <version>1.0</version>
+  <version>2.0.1</version>
 </dependency>
 
 ```
