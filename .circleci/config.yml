@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  "deploy":
+    docker: 
+      - image: jenkinsrise/cci-v2-docker-java8-gcloud:0.0.1
+    working_directory: ~/monitoring-filter
+    
+    steps:
+      - checkout
+      - run: git config --global user.name $JENKINS_USERNAME
+      - run: git config --global user.email $JENKINS_EMAIL
+      - run: mvn deploy
+ 
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - "deploy"
